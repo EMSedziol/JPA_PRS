@@ -1,0 +1,8 @@
+BillM	BillM1	Bill	Miller	5132223434	Bill@m.com	FALSE	FALSE
+Luke	Luke2	Luke	Vador	4321231234	Luke@vador.com	FALSE	FALSE
+roger	roger3	roger	smith	5132222424	rogers@gmial.com	FALSE	FALSE
+Ruby	ruby4	ruby	hurd	4324321234	rubyhurd@yahoo.com	FALSE	FALSE
+Billie	billie5	Billie	Jo	4443332222	BillJo@fuse.net	FALSE	FALSE
+Eileen	eileen6	Eileen	Reese	5554446666	eileenrees@gmail.com	FALSE	FALSE
+John	john7	john	kelly	1112223333	johnkelly@gmail.com	FALSE	FALSE
+Sean	Sean99	Sean	S8	2223334444	sean@sean.com	TRUE	TRUE

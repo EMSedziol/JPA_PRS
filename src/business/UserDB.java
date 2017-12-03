@@ -1,5 +1,14 @@
 package business;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.persistence.EntityManager;
@@ -7,6 +16,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.Path;
 
 import db.DBUtil;
 
@@ -54,14 +64,14 @@ public class UserDB {
 		return success;
 	}
 	
-	public static boolean addUser(User u) {
+	public static boolean addUser(User u2) {
 		boolean success = false;
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		EntityTransaction et = em.getTransaction();
 		
 		try {
 			et.begin();
-			em.persist(u);
+			em.persist(u2);
 	//		em.flush();  ///????
 			et.commit();
 			success = true;
@@ -123,6 +133,101 @@ public class UserDB {
 			
 		}
 		return usr;
+	}
+	
+	public static User validateUserName(String userName) {
+		User usr = null;
+		EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		String jpsql = "select u from User u where u.userName = :uname";
+		TypedQuery<User> q = em.createQuery(jpsql, User.class);
+		q.setParameter("uname", userName);
+		try {
+			usr = q.getSingleResult();
+		} catch (NoResultException nex) {
+			System.out.println("User "+ userName+ " could not be validate");
+			
+		}
+		return usr;
+	}
+
+	public static void addUsersFromTabfile() throws FileNotFoundException {
+		String FilePathName = "C:\\bootcampJavaRepo\\JPA_PRS\\src\\business\\JavaUsers.txt";
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(FilePathName)));
+
+		String line = null;
+
+		try {
+			while ((line = reader.readLine()) != null) {
+				String[] fields = line.split("\\t");
+				String userName = fields[0];
+				User u = UserDB.validateUserName(userName);
+				if (u != null) {
+					System.out.println("user '" + u.getUserName() + "' already in database");
+				} else {
+
+					String passWord = fields[1];
+					String firstName = fields[2];
+					String lastName = fields[3];
+					String phone = fields[4];
+					String email = fields[5];
+					Boolean reviewer = Boolean.valueOf(fields[6]);
+					Boolean admin = Boolean.valueOf(fields[7]);
+					Boolean active = true;
+
+					User u2 = new User(userName, passWord, firstName, lastName, phone, email, reviewer, admin, active);
+					u2.setDateCreated(new Timestamp(System.currentTimeMillis()));
+
+					if (UserDB.addUser(u2)) {
+						System.out.println("User " + userName + " added");
+					} else
+						System.out.println("User " + userName + " was not added");
+				}
+
+			}
+		} catch (IOException e) {
+			System.out.println(" Could not read file");
+			e.printStackTrace();
+		}
+	}
+	
+	public static void addUsersFromFlatfile() throws FileNotFoundException {
+		String FilePathName = "C:\\bootcampJavaRepo\\JPA_PRS\\src\\business\\UsersFlatFile.txt";
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(FilePathName)));
+
+		String line = null;
+
+		try {
+			while ((line = reader.readLine()) != null) {
+		//		String[] fields = line.split("\\t");
+				String userName = line.substring(0, 19);
+				User u = UserDB.validateUserName(userName);
+				if (u != null) {
+					System.out.println("user '" + u.getUserName() + "' already in database");
+				} else {
+
+					String passWord = line.substring(20, 29);
+					String firstName = line.substring(30, 49);
+					String lastName = line.substring(50, 69);
+					String phone = line.substring(70, 79);
+					String email = "";
+					Boolean reviewer = false;
+					Boolean admin = false;
+					Boolean active = true;
+
+					User u2 = new User(userName, passWord, firstName, lastName, phone, email, reviewer, admin, active);
+					u2.setDateCreated(new Timestamp(System.currentTimeMillis()));
+
+					if (UserDB.addUser(u2)) {
+						System.out.println("User " + userName + " added");
+					} else
+						System.out.println("User " + userName + " was not added");
+				}
+
+			}
+		} catch (IOException e) {
+			System.out.println(" Could not read file");
+			e.printStackTrace();
+		}
 	}
 
 }

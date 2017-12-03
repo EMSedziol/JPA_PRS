@@ -1,5 +1,6 @@
 package ui;
 
+import java.io.FileNotFoundException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -35,6 +36,20 @@ public class jpa_prs {
 				getProductInfo(); // for 1 product
 			if (choice.equalsIgnoreCase("8"))
 				validateLoginUser();
+			if (choice.equalsIgnoreCase("9"))
+				try {
+					UserDB.addUsersFromTabfile();
+				} catch (FileNotFoundException e) {
+					System.out.println("Could not upload User data");
+					e.printStackTrace();
+				}
+			if (choice.equalsIgnoreCase("10"))
+				try {
+					UserDB.addUsersFromFlatfile();
+				} catch (FileNotFoundException e) {
+					System.out.println("Could not upload User data from flat file");
+					e.printStackTrace();
+				}
 		}
 		System.out.println("Bye Bye");
 
@@ -50,6 +65,8 @@ public class jpa_prs {
 		System.out.println("6 - Get Vendor Information ");
 		System.out.println("7 - Get Product Information ");
 		System.out.println("8 - Validate User Login ");
+		System.out.println("9 - Upload tab delimited User data ");
+		System.out.println("10 - upload flat file User Data ");
 		System.out.println("e - exit");
 		choice = Console.getString("Enter option ");
 		return choice;
