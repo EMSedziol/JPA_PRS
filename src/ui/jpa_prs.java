@@ -1,24 +1,34 @@
 package ui;
 
-import java.io.FileNotFoundException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 
-import business.Console;
-import business.Product;
-import business.User;
-import business.UserDB;
-import business.Vendor;
-import business.ProductDB;
-import business.VendorDB;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import business.*;
+
 
 public class jpa_prs {
+	static UserDB userDB = null;
+	static User validatedUser = null;
+	static ProductDB productDB = null;
 
 	public static void main(String[] args) {
+		System.out.println();
 		System.out.println("JPA Demo");
+		System.out.println();
+		System.out.println("before method validateLoginUser");
+		validateLoginUser();
+		System.out.println("try to print name");
+		System.out.println(validatedUser.getFirstName() + " " + validatedUser.getLastName());
+		// the above works
+		ArrayList<Status> status = StatusDB.getAllStatus();
+		System.out.println(StatusDB.getAllStatus().toString());  // this needs to be put into a hashMap
+//		HashMap statusHashMap = fillStatusHashMap();
 		String choice = "";
 		while (!choice.equalsIgnoreCase("e")) {
-			choice = optionMenu();
+			choice = optionDisplayMenu();
 			System.out.println("choice " + choice);
 			if (choice.equalsIgnoreCase("1"))
 				getUserInfo(); // for 1 user
@@ -37,25 +47,17 @@ public class jpa_prs {
 			if (choice.equalsIgnoreCase("8"))
 				validateLoginUser();
 			if (choice.equalsIgnoreCase("9"))
-				try {
 					UserDB.addUsersFromTabfile();
-				} catch (FileNotFoundException e) {
-					System.out.println("Could not upload User data");
-					e.printStackTrace();
-				}
 			if (choice.equalsIgnoreCase("10"))
-				try {
 					UserDB.addUsersFromFlatfile();
-				} catch (FileNotFoundException e) {
-					System.out.println("Could not upload User data from flat file");
-					e.printStackTrace();
-				}
+			if (choice.equalsIgnoreCase("11"))
+				addPurchaseRequest();
 		}
 		System.out.println("Bye Bye");
 
 	}
 
-	public static String optionMenu() {
+	public static String optionDisplayMenu() {
 		String choice = "";
 		System.out.println("1 - Get User Information ");
 		System.out.println("2 - List all users: ");
@@ -67,6 +69,7 @@ public class jpa_prs {
 		System.out.println("8 - Validate User Login ");
 		System.out.println("9 - Upload tab delimited User data ");
 		System.out.println("10 - upload flat file User Data ");
+		System.out.println("11 - Enter purchase request ");
 		System.out.println("e - exit");
 		choice = Console.getString("Enter option ");
 		return choice;
@@ -98,6 +101,21 @@ public class jpa_prs {
 			System.out.println(u);
 		}
 	}
+	public static HashMap fillStatusHashMap() {
+		ArrayList<Status> status = StatusDB.getAllStatus();
+		HashMap<Integer, String>  statusHashMap = new HashMap<Integer, String>();
+		for (Status s : status) {
+			statusHashMap.put(s.getId(), s.getDescription());
+		}
+		return statusHashMap;
+	}
+/*	
+	private static String getStatusDesc(int id, HashMap statusHashMap) {
+		String statusDesc = "";
+		statusDesc = statusHashMap.get(id);
+		return statusDesc
+		
+	}*/
 
 	private static void deleteUser() {
 		int userId = Console.getInt("Enter userId to delete ");
@@ -149,10 +167,51 @@ public class jpa_prs {
 		String userName = Console.getString("Enter User Name: ");
 		String password = Console.getString("Password: ");
 		User u = UserDB.validateUser(userName, password);
+		System.out.println("out of validate user in UserDB");
 		if (u != null) {
 			System.out.println("user '" + u.getUserName() + "' successfully login");
+			validatedUser = u;
 		} else
 			System.out.println("Login failed");
 	}
+	
+	public static void addPurchaseRequest() {
+		System.out.println("");
+		String userName = validatedUser.getUserName();
+		String description = Console.getString("Description: ", 100);
+		String justification = Console.getString("Justification: ", 225);
+		LocalDate dateNeeded = Console.getLocalDate("Date Needed: ");
+		String deliveryMode = Console.getString("Delivery method: ");
+		int statusId = 1; // new request
+		double total = 0.0;
+		LocalDate submittedDate = LocalDate.now();
+		String reasonForRejection = "";
+		boolean isActive = true;
+		
+		boolean enterLineItem = true;
+		boolean cancel = false;
+		boolean submit = false;
+		while (enterLineItem) {
+			String lineItem = Console.getString("1 - enter line item, 2 - view summary/submit, 3 - cancel");
+			if (lineItem.equalsIgnoreCase("1")) {
+				ArrayList<Product> products = ProductDB.getAllProducts();
+				System.out.println("List of Users");
+				for (Product prd : products) {
+					System.out.println(prd.getProductId() + " " + prd.getName() + " " + prd.getPrice());
+				}
+			}
+			if (lineItem.equalsIgnoreCase("2")) {
+				submit = true;
+				enterLineItem = false;
+			}
+			if (lineItem.equalsIgnoreCase("3")) {
+				cancel = true;
+				enterLineItem = false;
+			}
+		}
+		
+		
+	}
+
 
 }

@@ -1,6 +1,9 @@
 package business;
 
+import java.util.ArrayList;
+
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import db.DBUtil;
 
@@ -18,4 +21,16 @@ public class ProductDB {
 		}
 		return prd;
 	}
+	
+	public static ArrayList<Product> getAllProducts() {
+		EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        try {
+            TypedQuery<Product> query = em.createQuery("SELECT p FROM User p", Product.class);
+            ArrayList<Product> allProducts = new ArrayList<>(query.getResultList());
+            return allProducts;
+        }
+        finally {
+            em.close();
+        }
+    }
 }

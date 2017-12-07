@@ -135,7 +135,7 @@ public class UserDB {
 		return usr;
 	}
 	
-	public static User validateUserName(String userName) {
+	public static User validateUserName(User userName) {
 		User usr = null;
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		String jpsql = "select u from User u where u.userName = :uname";
@@ -150,9 +150,16 @@ public class UserDB {
 		return usr;
 	}
 
-	public static void addUsersFromTabfile() throws FileNotFoundException {
+//	public static void addUsersFromTabfile() throws FileNotFoundException {
+	public static void addUsersFromTabfile() {
 		String FilePathName = "C:\\bootcampJavaRepo\\JPA_PRS\\src\\business\\JavaUsers.txt";
-		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(FilePathName)));
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(FilePathName)));
+		} catch (FileNotFoundException e1) {
+			System.out.println("Could not retreive file");
+			e1.printStackTrace();
+		}
 
 		String line = null;
 
@@ -190,9 +197,21 @@ public class UserDB {
 		}
 	}
 	
-	public static void addUsersFromFlatfile() throws FileNotFoundException {
+	private static User validateUserName(String userName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	// public static void addUsersFromFlatfile() throws FileNotFoundException {
+		public static void addUsersFromFlatfile() {
 		String FilePathName = "C:\\bootcampJavaRepo\\JPA_PRS\\src\\business\\UsersFlatFile.txt";
-		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(FilePathName)));
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(FilePathName)));
+		} catch (FileNotFoundException e1) {
+			System.out.println("Could not read file");
+			e1.printStackTrace();
+		}
 
 		String line = null;
 

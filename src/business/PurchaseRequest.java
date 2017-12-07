@@ -1,6 +1,7 @@
 package business;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -20,6 +21,9 @@ public class PurchaseRequest implements Serializable  {
 	@JoinColumn(name="UserId")
 	private int userId = 0;
 	private String description = "";
+	private String justification = "";
+	private LocalDate dateNeeded = LocalDate.now();
+	private int statusId = 0;
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name="PurchaseRequestID")
 	private List<PurchaseRequestLineItem> lineItems;
@@ -62,6 +66,17 @@ public class PurchaseRequest implements Serializable  {
 	public void setLineItems(List<PurchaseRequestLineItem> lineItems) {
 		this.lineItems = lineItems;
 	}
+	
+/*	public static LocalDateTime getDateFrom StringLDT (String date) {
+			String dateTime = dateStr + "T00:00:00";
+			LocalDateTime dt = LocalDateTime.parse(dataTime);
+			return dt;
+	}
+	
+	public Timestamp getDateFromStringTS(String dateStr)
+	{
+		
+	}*/
 
 	@Override
 	public String toString() {
@@ -70,69 +85,6 @@ public class PurchaseRequest implements Serializable  {
 				+ ", description=" + description
 				+  "]";
 	}
-	/*public String getJustification() {
-		return justification;
-	}
-	public void setJustification(String justification) {
-		this.justification = justification;
-	}
-	public String getDateNeeded() {
-		return dateNeeded;
-	}
-	public void setDateNeeded(String dateNeeded) {
-		this.dateNeeded = dateNeeded;
-	}
-	public String getDeliveryMode() {
-		return deliveryMode;
-	}
-	public void setDeliveryMode(String deliveryMode) {
-		this.deliveryMode = deliveryMode;
-	}
-	public int getStatusId() {
-		return statusId;
-	}
-	public void setStatusId(int statusId) {
-		this.statusId = statusId;
-	}
-	public double getTotal() {
-		return total;
-	}
-	public void setTotal(double total) {
-		this.total = total;
-	}
-	public String getSubmittedDate() {
-		return submittedDate;
-	}
-	public void setSubmittedDate(String submittedDate) {
-		this.submittedDate = submittedDate;
-	}
-	public String getReasonForRejection() {
-		return reasonForRejection;
-	}
-	public void setReasonForRejection(String reasonForRejection) {
-		this.reasonForRejection = reasonForRejection;
-	}
-	public boolean isActive() {
-		return active;
-	}
-	public void setActive(boolean active) {
-		this.active = active;
-	}*/
-		
-	/*@Override
-	public String toString() {
-		return "[id="+id
-				+ ", userId=" + userId
-				+ ", description=" + description
-				+ ", justification=" + justification
-				+ ", dateNeeded=" + dateNeeded
-				+ ", deliveryMode=" + deliveryMode
-				+ ", statusId=" + statusId
-				+ ", total=" + total
-				+ ", submittedDate=" + submittedDate
-				+ ", reasonForRejection=" + reasonForRejection
-				+ ", active=" + active + "]";
-	}*/
 
 }
 

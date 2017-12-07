@@ -1,18 +1,23 @@
 package business;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.eclipse.persistence.sessions.Session;
 import org.eclipse.persistence.sessions.serializers.Serializer;
 
 @Entity
-public class User implements Serializer {
+public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -132,28 +137,5 @@ public class User implements Serializer {
 				+ ", dateCreated=" + dateCreated + "]";
 	}
 
-	@Override
-	public Object deserialize(Object arg0, Session arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public Class getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void initialize(Class arg0, String arg1, Session arg2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Object serialize(Object arg0, Session arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

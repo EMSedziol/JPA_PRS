@@ -1,5 +1,7 @@
 package business;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,7 +11,7 @@ import org.eclipse.persistence.sessions.Session;
 import org.eclipse.persistence.sessions.serializers.Serializer;
 
 @Entity
-public class Product implements Serializer {
+public class Product implements Serializable {
 	private static final Product product = null;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -118,31 +120,6 @@ public class Product implements Serializer {
 				+ partNumber + ", name=" + name + ", price=" + price + ", unit=" + unit + ", photopath=" + photopath
 				+ ", isActive=" + isActive + "]";
 	}
-
-	@Override
-	public Object deserialize(Object arg0, Session arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Class getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void initialize(Class arg0, String arg1, Session arg2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Object serialize(Object arg0, Session arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 	
 }
