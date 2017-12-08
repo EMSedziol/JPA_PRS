@@ -135,7 +135,7 @@ public class UserDB {
 		return usr;
 	}
 	
-	public static User validateUserName(User userName) {
+	public static User validateUserName(String userName) {
 		User usr = null;
 		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 		String jpsql = "select u from User u where u.userName = :uname";
@@ -143,6 +143,8 @@ public class UserDB {
 		q.setParameter("uname", userName);
 		try {
 			usr = q.getSingleResult();
+			System.out.println("in validateUserName ");
+			System.out.println(usr.getUserName() + " found");
 		} catch (NoResultException nex) {
 			System.out.println("User "+ userName+ " could not be validate");
 			
@@ -167,11 +169,11 @@ public class UserDB {
 			while ((line = reader.readLine()) != null) {
 				String[] fields = line.split("\\t");
 				String userName = fields[0];
+				System.out.println("userName " + userName);
 				User u = UserDB.validateUserName(userName);
 				if (u != null) {
 					System.out.println("user '" + u.getUserName() + "' already in database");
 				} else {
-
 					String passWord = fields[1];
 					String firstName = fields[2];
 					String lastName = fields[3];
@@ -196,57 +198,56 @@ public class UserDB {
 			e.printStackTrace();
 		}
 	}
-	
-	private static User validateUserName(String userName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	// public static void addUsersFromFlatfile() throws FileNotFoundException {
-		public static void addUsersFromFlatfile() {
+	public static void addUsersFromFlatfile() {
 		String FilePathName = "C:\\bootcampJavaRepo\\JPA_PRS\\src\\business\\UsersFlatFile.txt";
+		System.out.println("Paht/File" + FilePathName);
 		BufferedReader reader = null;
 		try {
+			System.out.println("in first try");
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(FilePathName)));
 		} catch (FileNotFoundException e1) {
 			System.out.println("Could not read file");
 			e1.printStackTrace();
 		}
 
-		String line = null;
+			String line = null;
 
-		try {
-			while ((line = reader.readLine()) != null) {
-		//		String[] fields = line.split("\\t");
-				String userName = line.substring(0, 19);
-				User u = UserDB.validateUserName(userName);
-				if (u != null) {
-					System.out.println("user '" + u.getUserName() + "' already in database");
-				} else {
+			try {
+				while ((line = reader.readLine()) != null) {
+					// String[] fields = line.split("\\t");
+					String userName = line.substring(0, 19);
+					User u = UserDB.validateUserName(userName);
+					if (u != null) {
+						System.out.println("user '" + u.getUserName() + "' already in database");
+					} else {
 
-					String passWord = line.substring(20, 29);
-					String firstName = line.substring(30, 49);
-					String lastName = line.substring(50, 69);
-					String phone = line.substring(70, 79);
-					String email = "";
-					Boolean reviewer = false;
-					Boolean admin = false;
-					Boolean active = true;
+						String passWord = line.substring(20, 29).trim();
+						String firstName = line.substring(30, 49).trim();
+						String lastName = line.substring(50, 69).trim();
+						String phone = line.substring(70, 79).trim();
+						String email = "";
+						Boolean reviewer = false;
+						Boolean admin = false;
+						Boolean active = true;
 
-					User u2 = new User(userName, passWord, firstName, lastName, phone, email, reviewer, admin, active);
-					u2.setDateCreated(new Timestamp(System.currentTimeMillis()));
+						User u2 = new User(userName, passWord, firstName, lastName, phone, email, reviewer, admin,
+								active);
+						u2.setDateCreated(new Timestamp(System.currentTimeMillis()));
 
-					if (UserDB.addUser(u2)) {
-						System.out.println("User " + userName + " added");
-					} else
-						System.out.println("User " + userName + " was not added");
+						if (UserDB.addUser(u2)) {
+							System.out.println("User " + userName + " added");
+						} else
+							System.out.println("User " + userName + " was not added");
+					}
+
 				}
-
+			} catch (IOException e) {
+				System.out.println(" Could not read file");
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			System.out.println(" Could not read file");
-			e.printStackTrace();
-		}
+		
 	}
 
 }
